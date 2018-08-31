@@ -1,0 +1,16 @@
+﻿using SnakeGame.DAL.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SnakeGame.DAL.Interfaces
+{
+    public interface IUnitOfWork : IDisposable
+    {
+        ApplicationUserManager UserManager { get; }
+        IPlayerManager PlayerManager { get; }
+        void Save();
+    }
+}

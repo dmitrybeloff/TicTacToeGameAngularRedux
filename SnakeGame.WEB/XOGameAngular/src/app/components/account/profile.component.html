@@ -1,0 +1,38 @@
+<div *ngIf="edit" class="text-left">
+    <form #myForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="username">Name</label>
+            <input type="text" class="form-control" [(ngModel)]="user.username" name="username">
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" [(ngModel)]="user.name" name="name">
+        </div>
+        <div class="form-group">
+            <label for="surname">Surname</label>
+            <input type="text" class="form-control" [(ngModel)]="user.surname" name="surname">
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="text" class="form-control" [(ngModel)]="user.age" name="age">
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+
+<div *ngIf="!edit" class="text-left">
+    <div>
+        <span>Username: </span> {{user?.username}}
+    </div>
+    <div>
+        <span>Name: </span> {{user?.name}}
+    </div>
+    <div>
+        <span>Surname: </span> {{user?.surname}}
+    </div>
+    <div>
+        <span>Age: </span> {{user?.age}}
+    </div>
+    <button (click)="onEdit()">Edit</button>
+</div>

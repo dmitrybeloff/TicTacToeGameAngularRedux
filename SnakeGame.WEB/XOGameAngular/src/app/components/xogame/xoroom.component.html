@@ -1,0 +1,96 @@
+<!-- Invite Modal -->
+<div class="modal fade" #modal>
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <form>
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <header class="font-12 bold">Новое приглашение!</header>
+              </div>
+              <div class="modal-body">
+                {{invitingPlayer?.username}} приглашает поиграть!
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" data-dismiss="modal" (click)="acceptInvite()">Принять</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="declineInvite()">Отказаться</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+<!-- Invite Modal -->
+
+<!-- Message Modal -->
+<div class="modal fade" #messageModal>
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <form>
+              <div class="modal-header bg-warning">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <header class="font-12 bold">Новое сообщение!</header>
+              </div>
+              <div class="modal-body">
+                {{alertMessage?.message}}
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">close</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+<!-- Message Modal -->
+
+<div class="chat-container" *ngIf="!isGame">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="panel panel-default text-left" *ngFor="let msg of (chatMessages$ | async)">
+          <div class="panel-heading">{{msg.name | titlecase}}<span style="font-size: 12px">@{{msg.username}}</span></div>
+          <div class="panel-body">
+            {{msg.message}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let usr of (chatUsers$ | async)">
+            <span class="fake-link" (click)="sendInvite(usr.id)">{{usr.username}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div>
+    <form class="form-inline" (ngSubmit)="sendMessage()">
+      <div class="container text-left">
+          <div class="row" style="background:#ddceab;">
+              <div class="col-sm py-2">
+                  <input type="text" class="form-control" name="message" [(ngModel)]="chatMessage.message"/>
+                  <button type="submit" class="btn btn-default">Submit</button>
+              </div>
+          </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="game-container text-center" *ngIf="isGame">
+  <h1>{{gameState?.currentUsername}} ходит!</h1>
+  <table>
+    <tr>
+        <td (click)="makeMove(0)">{{gameState?.deck[0]}}</td>
+        <td (click)="makeMove(1)">{{gameState?.deck[1]}}</td>
+        <td (click)="makeMove(2)">{{gameState?.deck[2]}}</td>
+    </tr>
+    <tr>
+        <td (click)="makeMove(3)">{{gameState?.deck[3]}}</td>
+        <td (click)="makeMove(4)">{{gameState?.deck[4]}}</td>
+        <td (click)="makeMove(5)">{{gameState?.deck[5]}}</td>
+    </tr>
+    <tr>
+        <td (click)="makeMove(6)">{{gameState?.deck[6]}}</td>
+        <td (click)="makeMove(7)">{{gameState?.deck[7]}}</td>
+        <td (click)="makeMove(8)">{{gameState?.deck[8]}}</td>
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,38 @@
+﻿@model SnakeGame.WEB.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div>
+    <h4>Login</h4>
+    @Html.ValidationSummary(false)
+    <hr />
+    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+    <div>
+        Электронный адрес
+        <div>
+            @Html.EditorFor(model => model.Email)
+        </div>
+    </div>
+
+    <div>
+        Пароль
+        <div>
+            @Html.EditorFor(model => model.Password)
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <input type="submit" value="Login" />
+        </div>
+    </div>
+</div>
+}
