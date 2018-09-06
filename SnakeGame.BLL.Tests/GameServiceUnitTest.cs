@@ -20,11 +20,9 @@ namespace SnakeGame.BLL.Tests
 
             GameModel gameModel = new GameModel(p1, p2);
 
-            string gameMessage;
-
             var previousId = gameModel.CurrentId;
 
-            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out gameMessage);
+            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out string gameMessage);
 
             Assert.AreNotEqual(previousId, gameModel.CurrentId);
         }
@@ -39,9 +37,7 @@ namespace SnakeGame.BLL.Tests
 
             GameModel gameModel = new GameModel(p1, p2);
 
-            string gameMessage;
-
-            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out gameMessage);
+            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out string gameMessage);
 
             var result = gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out gameMessage);
 
@@ -58,9 +54,7 @@ namespace SnakeGame.BLL.Tests
 
             GameModel gameModel = new GameModel(p1, p2);
 
-            string gameMessage;
-
-            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out gameMessage);
+            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out string gameMessage);
 
             var result = gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out gameMessage);
 
@@ -77,9 +71,7 @@ namespace SnakeGame.BLL.Tests
 
             GameModel gameModel = new GameModel(p1, p2);
 
-            string gameMessage;
-
-            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out gameMessage);
+            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out string gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 1, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 2, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 3, out gameMessage);

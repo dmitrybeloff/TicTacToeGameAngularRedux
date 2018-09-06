@@ -111,16 +111,15 @@ namespace SnakeGame.WEB.Hubs
             var game = Games.Where(g => g.GameId == gameId).FirstOrDefault();
             if (game != null)
             {
-                string gameMessage;
                 // Рассчитываем состояние игры
                 // Здесь не обязательно передавать game по ссылке, 
                 // потому что он и так передается по ссылке(новых экземпляров game я не буду создавать), 
                 // но добавил ref для понимания, что game изменится в методе
-                var gameCallback = gameService.MakeMove(ref game, playerId, cellIndex, out gameMessage); 
+                var gameCallback = gameService.MakeMove(ref game, playerId, cellIndex, out string gameMessage);
 
                 // Обработка результатов хода
-                
-                switch(gameCallback)
+
+                switch (gameCallback)
                 {
                     // Обработка неправильного хода
                     case (GameMoveResults.Error):
