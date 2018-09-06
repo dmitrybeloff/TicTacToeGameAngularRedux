@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\PlayerDTO.cs" />
+    <Compile Include="Enum\GameMoveResults.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />
     <Compile Include="Infrastructure\UnitOfWorkModule .cs" />
     <Compile Include="Interfaces\IGameService.cs" />

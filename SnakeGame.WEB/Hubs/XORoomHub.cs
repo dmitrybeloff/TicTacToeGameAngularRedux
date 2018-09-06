@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using SnakeGame.BLL.Enum;
 using SnakeGame.BLL.Interfaces;
 using SnakeGame.BLL.Models;
 using SnakeGame.BLL.Services;
@@ -68,7 +69,7 @@ namespace SnakeGame.WEB.Hubs
         {
             var callerId = Context.ConnectionId;
 
-            // нНходим пользователей
+            // Находим пользователей
             var caller = Users.Where(user => user.Id == callerId).FirstOrDefault();
             var target = Users.Where(user => user.Id == targetId).FirstOrDefault();
 
@@ -110,44 +111,52 @@ namespace SnakeGame.WEB.Hubs
             var game = Games.Where(g => g.GameId == gameId).FirstOrDefault();
             if (game != null)
             {
+                string gameMessage;
                 // Рассчитываем состояние игры
                 // Здесь не обязательно передавать game по ссылке, 
                 // потому что он и так передается по ссылке(новых экземпляров game я не буду создавать), 
                 // но добавил ref для понимания, что game изменится в методе
-                var gameCallback = gameService.MakeMove(ref game, playerId, cellIndex); 
+                var gameCallback = gameService.MakeMove(ref game, playerId, cellIndex, out gameMessage); 
 
                 // Обработка результатов хода
-
-                // Обработка неправильного хода
-                if (gameCallback.Length > 0 && gameCallback.Contains("Ошибка"))
-                    Clients.Caller.OnAlert(gameCallback);
-                // Завершение игры
-                else if (gameCallback.Length > 0)
+                
+                switch(gameCallback)
                 {
-                    // Передача последнего хода, это необязательное действие, но если будут сетевые задержки, то желательное
-                    Clients.Group(game.PlayerList[0].Group).OnSetGameState(game.GameId, game.CurrentId, game.CurrentUsername, game.Deck); 
-                    // Передачи команды на завершение игры 
-                    Clients.Group(game.PlayerList[0].Group).OnGameEnded();
-                    // Передача сообщения о результатах игры
-                    Clients.Group(game.PlayerList[0].Group).OnAlert(gameCallback);
+                    // Обработка неправильного хода
+                    case (GameMoveResults.Error):
+                        Clients.Caller.OnAlert(gameMessage);
+                        break;
+                    // Завершение игры
+                    case (GameMoveResults.EndGame):
+                        // Передача последнего хода, это необязательное действие, но если будут сетевые задержки, то желательное
+                        Clients.Group(game.PlayerList[0].Group).OnSetGameState(game.GameId, game.CurrentId, game.CurrentUsername, game.Deck);
+                        // Передачи команды на завершение игры 
+                        Clients.Group(game.PlayerList[0].Group).OnGameEnded();
+                        // Передача сообщения о результатах игры
+                        Clients.Group(game.PlayerList[0].Group).OnAlert(gameMessage);
 
-                    // Удаление пользователей из группы
-                    foreach (var player in game.PlayerList)
-                    {
-                        var user = Users.Where(x => x.Id == player.Id).FirstOrDefault();
-                        if (user != null)
+                        // Удаление пользователей из группы
+                        foreach (var player in game.PlayerList)
                         {
-                            Groups.Remove(user.Id, user.Group);
-                            user.Group = null;
+                            var user = Users.Where(x => x.Id == player.Id).FirstOrDefault();
+                            if (user != null)
+                            {
+                                Groups.Remove(user.Id, user.Group);
+                                user.Group = null;
+                            }
                         }
-                    }
 
-                    // Удаление игры из списка
-                    Games.Remove(game);
-                }
-                else
-                    // Передача состояния игры всем клиентам в группе
-                    Clients.Group(game.PlayerList[0].Group).OnSetGameState(game.GameId, game.CurrentId, game.CurrentUsername, game.Deck);
+                        // Удаление игры из списка
+                        Games.Remove(game);
+                        break;
+                    case (GameMoveResults.Continue):
+                        // Передача состояния игры всем клиентам в группе
+                        Clients.Group(game.PlayerList[0].Group).OnSetGameState(game.GameId, game.CurrentId, game.CurrentUsername, game.Deck);
+                        break;
+                    default:
+                        Clients.Group(game.PlayerList[0].Group).OnAlert("Что-то пошло не так");
+                        break;
+                }                
             }
         }
 

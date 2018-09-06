@@ -1,14 +1,10 @@
-﻿using SnakeGame.BLL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SnakeGame.BLL.Enum;
+using SnakeGame.BLL.Models;
 
 namespace SnakeGame.BLL.Interfaces
 {
     public interface IGameService
     {
-        string MakeMove(ref GameModel game, string playerId, int cellIndex);
+        GameMoveResults MakeMove(ref GameModel game, string playerId, int cellIndex, out string gameMessage);
     }
 }

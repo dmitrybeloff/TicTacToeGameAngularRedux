@@ -1,4 +1,5 @@
-﻿using SnakeGame.BLL.Interfaces;
+﻿using SnakeGame.BLL.Enum;
+using SnakeGame.BLL.Interfaces;
 using SnakeGame.BLL.Models;
 using System.Linq;
 
@@ -6,12 +7,16 @@ namespace SnakeGame.BLL.Services
 {
     public class GameService : IGameService
     {
-        public string MakeMove(ref GameModel game, string playerId, int cellIndex)
+        public GameMoveResults MakeMove(ref GameModel game, string playerId, int cellIndex, out string gameMessage)
         {
+            gameMessage = string.Empty;
             if (game.CurrentId == playerId)
             {
                 if (game.Deck[cellIndex] != null && game.Deck[cellIndex] != string.Empty)
-                    return "Ошибка: Клетка занята!";               
+                {
+                    gameMessage = "Ошибка: Клетка занята!";
+                    return GameMoveResults.Error;
+                }
 
                 var player = game.PlayerList.Where(p => p.Id == playerId).FirstOrDefault();
 
@@ -34,7 +39,8 @@ namespace SnakeGame.BLL.Services
 
                     if (winner)
                     {
-                        return player.Username + " победил!";
+                        gameMessage =  player.Username + " победил!";
+                        return GameMoveResults.EndGame;
                     }
                 }                
 
@@ -51,7 +57,8 @@ namespace SnakeGame.BLL.Services
                     }
                     if (winner)
                     {
-                        return player.Username + " победил!";
+                        gameMessage = player.Username + " победил!";
+                        return GameMoveResults.EndGame;
                     }
                 }                
 
@@ -67,7 +74,8 @@ namespace SnakeGame.BLL.Services
 
                 if (winner)
                 {
-                    return player.Username + " победил!";
+                    gameMessage = player.Username + " победил!";
+                    return GameMoveResults.EndGame;
                 }
 
                 winner = true;
@@ -83,20 +91,22 @@ namespace SnakeGame.BLL.Services
 
                 if (winner)
                 {
-                    return player.Username + " победил!";
+                    gameMessage = player.Username + " победил!";
+                    return GameMoveResults.EndGame;
                 }
 
                 var hasMoves = game.Deck.Any(cell => string.IsNullOrEmpty(cell));
                 if (!hasMoves)
                 {
-                    return "Ничья!";
+                    gameMessage = "Ничья!";
+                    return GameMoveResults.EndGame;
                 }
 
                 var newPlayer = game.PlayerList.Where(p => p.Id != playerId).First();
                 game.CurrentUsername = newPlayer.Username;
                 game.CurrentId = newPlayer.Id;
             }
-            return string.Empty;
+            return GameMoveResults.Continue;
         }
     }
 }
