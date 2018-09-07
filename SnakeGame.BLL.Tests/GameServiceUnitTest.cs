@@ -79,9 +79,9 @@ namespace SnakeGame.BLL.Tests
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 6, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 5, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 8, out gameMessage);
-            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 7, out gameMessage);
+            var result = gameService.MakeMove(ref gameModel, gameModel.CurrentId, 7, out gameMessage);
 
-            Assert.AreEqual(gameMessage.Contains("Ничья"), true);
+            Assert.AreEqual(result, GameMoveResults.Draw);
         }
 
         [TestMethod]
@@ -96,22 +96,23 @@ namespace SnakeGame.BLL.Tests
 
             string gameMessage = string.Empty;
 
-            var winnerUsername = gameModel.CurrentUsername;
-
-            GameMoveResults result;
+            var winnerUsername = gameModel.CurrentUsername;            
 
             for (var i = 0; i < 9; i+=3)
             {
+                GameMoveResults result = GameMoveResults.Continue;
+                int counter = 0;
                 int tmp = i < 6 ? i + 3 : i - 6;
                 for (var j = 0; j < i+3; j ++)
-                {               
+                {
+                    counter++;
                     result = gameService.MakeMove(ref gameModel, gameModel.CurrentId, i + j, out gameMessage);
-                    if (result == GameMoveResults.EndGame)
+                    if (counter == 3)
                         break;
                     gameService.MakeMove(ref gameModel, gameModel.CurrentId, tmp + j, out gameMessage);
                 }
 
-                Assert.AreEqual(gameMessage.Contains(winnerUsername), true);
+                Assert.AreEqual(result, GameMoveResults.EndGame);
 
                 gameModel = new GameModel(p1, p2);
                 winnerUsername = gameModel.CurrentUsername;
@@ -132,20 +133,20 @@ namespace SnakeGame.BLL.Tests
 
             var winnerUsername = gameModel.CurrentUsername;
 
-            GameMoveResults result;
-
             for (var i = 0; i < 3; i++)
             {
+                GameMoveResults result = GameMoveResults.Continue;
+                int counter = 0;
                 int tmp = i < 2 ? i + 1 : i - 2;
                 for (var j = 0; j < 9; j += 3)
                 {
                     result = gameService.MakeMove(ref gameModel, gameModel.CurrentId, i + j, out gameMessage);
-                    if (result == GameMoveResults.EndGame)
+                    if (counter == 3)
                         break;
                     gameService.MakeMove(ref gameModel, gameModel.CurrentId, tmp + j, out gameMessage);
                 }
 
-                Assert.AreEqual(gameMessage.Contains(winnerUsername), true);
+                Assert.AreEqual(result, GameMoveResults.EndGame);
 
                 gameModel = new GameModel(p1, p2);
                 winnerUsername = gameModel.CurrentUsername;
@@ -170,9 +171,9 @@ namespace SnakeGame.BLL.Tests
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 1, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 4, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 2, out gameMessage);
-            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 8, out gameMessage);
+            var result = gameService.MakeMove(ref gameModel, gameModel.CurrentId, 8, out gameMessage);
 
-            Assert.AreEqual(gameMessage.Contains(winnerUsername), true);
+            Assert.AreEqual(result, GameMoveResults.EndGame);
         }
 
         [TestMethod]
@@ -193,9 +194,9 @@ namespace SnakeGame.BLL.Tests
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 0, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 4, out gameMessage);
             gameService.MakeMove(ref gameModel, gameModel.CurrentId, 1, out gameMessage);
-            gameService.MakeMove(ref gameModel, gameModel.CurrentId, 6, out gameMessage);
+            var result = gameService.MakeMove(ref gameModel, gameModel.CurrentId, 6, out gameMessage);
 
-            Assert.AreEqual(gameMessage.Contains(winnerUsername), true);
+            Assert.AreEqual(result, GameMoveResults.EndGame);
         }
     }
 }

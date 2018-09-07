@@ -10,6 +10,7 @@ namespace SnakeGame.BLL.Enum
     {
         Error,
         Continue,
+        Draw,
         EndGame
     }
 }

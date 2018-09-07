@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 using SnakeGame.BLL.Enum;
 using SnakeGame.BLL.Interfaces;
 using SnakeGame.BLL.Models;
-using SnakeGame.BLL.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SnakeGame.WEB.Hubs
 {
@@ -126,7 +124,7 @@ namespace SnakeGame.WEB.Hubs
                         Clients.Caller.OnAlert(gameMessage);
                         break;
                     // Завершение игры
-                    case (GameMoveResults.EndGame):
+                    case (GameMoveResults.EndGame | GameMoveResults.Draw):
                         // Передача последнего хода, это необязательное действие, но если будут сетевые задержки, то желательное
                         Clients.Group(game.PlayerList[0].Group).OnSetGameState(game.GameId, game.CurrentId, game.CurrentUsername, game.Deck);
                         // Передачи команды на завершение игры 

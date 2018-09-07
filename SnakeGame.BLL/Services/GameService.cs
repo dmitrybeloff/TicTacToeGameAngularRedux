@@ -99,7 +99,7 @@ namespace SnakeGame.BLL.Services
                 if (!hasMoves)
                 {
                     gameMessage = "Ничья!";
-                    return GameMoveResults.EndGame;
+                    return GameMoveResults.Draw;
                 }
 
                 var newPlayer = game.PlayerList.Where(p => p.Id != playerId).First();
